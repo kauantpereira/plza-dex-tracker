@@ -1,27 +1,73 @@
-# plza-dex-tracker
+# React + TypeScript + Vite
 
-A Progressive Web App for tracking your Living Form Dex in Pokémon Legends: Z-A (including Mega Dimension DLC).
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-Mobile-first, works offline, installable to home screen — no app store needed.
+Currently, two official plugins are available:
 
-## Features (planned)
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
 
-- Track 468 Pokémon across Living Forms, Living DLC, and Special Box
-- Toggle Include / Caught / Via Evolution per Pokémon
-- Auto-calculated PC box placement (continuous across groups)
-- Catch quantity per base form
-- Filter by name, location, caught status
-- Offline support
-- Dark mode
+## React Compiler
 
-## Tech Stack
+The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
 
-- React + TypeScript + Vite
-- Tailwind CSS
-- Zustand (state management)
-- vite-plugin-pwa (offline / installable)
-- GitHub Pages (hosting)
+## Expanding the ESLint configuration
 
-## Status
+If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
 
-🚧 Under construction
+```js
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
+
+      // Remove tseslint.configs.recommended and replace with this
+      tseslint.configs.recommendedTypeChecked,
+      // Alternatively, use this for stricter rules
+      tseslint.configs.strictTypeChecked,
+      // Optionally, add this for stylistic rules
+      tseslint.configs.stylisticTypeChecked,
+
+      // Other configs...
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
+```
+
+You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+
+```js
+// eslint.config.js
+import reactX from 'eslint-plugin-react-x'
+import reactDom from 'eslint-plugin-react-dom'
+
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
+      // Enable lint rules for React
+      reactX.configs['recommended-typescript'],
+      // Enable lint rules for React DOM
+      reactDom.configs.recommended,
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
+```
