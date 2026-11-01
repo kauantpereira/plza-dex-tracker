@@ -8,10 +8,24 @@ interface Props {
   familyMap: Record<string, Pokemon[]>
   catchQtyMap: Record<number, number>
   boxPositions: Record<number, BoxPosition>
+  hasDlc: boolean
+  editMode: boolean
+  onRequestIncludeToggle: (id: number) => void
 }
 
-export function PokemonList({ pokemon, familyMap, catchQtyMap, boxPositions }: Props) {
+export function PokemonList({ pokemon, familyMap, catchQtyMap, boxPositions, hasDlc, editMode, onRequestIncludeToggle }: Props) {
   const [expandedId, setExpandedId] = useState<number | null>(null)
+
+  // Build evolveFrom lookup: for each non-base pokemon, find direct pre-evo name
+  const evolveFromMap: Record<number, string> = {}
+  for (const p of pokemon) {
+    if (p.stage === 0) continue
+    const family = familyMap[p.baseForm] ?? []
+    const preEvo = family
+      .filter((m) => m.stage === p.stage - 1)
+      .sort((a, b) => a.id - b.id)[0]
+    if (preEvo) evolveFromMap[p.id] = preEvo.name
+  }
 
   // Group filtered pokemon into families preserving order
   const families: { baseForm: string; members: Pokemon[] }[] = []
@@ -54,7 +68,11 @@ export function PokemonList({ pokemon, familyMap, catchQtyMap, boxPositions }: P
                   catchQty={p.stage === 0 ? qty : undefined}
                   boxPosition={boxPositions[p.id]}
                   expanded={expandedId === p.id}
+                  hasDlc={hasDlc}
+                  editMode={editMode}
+                  evolveFrom={evolveFromMap[p.id]}
                   onToggleExpand={() => setExpandedId(expandedId === p.id ? null : p.id)}
+                  onRequestIncludeToggle={onRequestIncludeToggle}
                 />
               ))}
             </div>

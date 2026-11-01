@@ -19,4 +19,5 @@ export interface UserEntry {
   included: boolean
   caught: boolean
   viaEvolution: boolean
+  bagCount: number
 }
